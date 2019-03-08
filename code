@@ -1,0 +1,29 @@
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.preprocessing import StandardScaler
+
+
+def read_data(data_path):
+    with open(data_path, 'r') as f:
+        data = []
+        for line in f.readlines():
+            data.append(line.strip())
+    return data
+
+
+features = read_data(r"\Test1_features.dat")
+labels = read_data(r"\Test1_labels.dat")
+
+train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size=0.33,
+                                                                            random_state=33)
+scaler = StandardScaler()
+train_features = scaler.fit_transform(train_features)
+test_features = scaler.fit_transform(test_features)
+
+model = svm.SVC()
+model.fit(train_features, train_labels)
+
+prediction = model.predict(test_features)
+x = metrics.accuracy_score(prediction, test_labels)
+print(x)
